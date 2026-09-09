@@ -1,0 +1,2 @@
+# Optional dependencies for scripts/gee_export_features.py
+earthengine-api
