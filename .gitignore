@@ -5,3 +5,8 @@ venv/
 .env
 .streamlit/secrets.toml
 data/ground_truth_feedback.csv
+*.db
+*.db-wal
+*.db-shm
+.pytest_cache/
+.DS_Store
