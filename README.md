@@ -1,4 +1,4 @@
-# NER Landslide Risk Dashboard — Developer Handoff
+# slopesense-ai — NER Landslide Risk Dashboard Developer Handoff
 
 This ZIP contains a prototype Random Forest landslide-risk dashboard and the
 integration contract needed to replace its precompiled terrain/NDVI data with
