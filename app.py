@@ -719,7 +719,7 @@ if current_user["role"] == "citizen":
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # Safe Shelters & Map + Community Hazard Reporting
+    # Safe Shelters Map and Emergency Contacts
     c_map, c_side = st.columns([1.3, 1], gap="medium")
 
     with c_map:
@@ -756,54 +756,8 @@ if current_user["role"] == "citizen":
 
     with c_side:
         st.markdown("""<div class="app-card">
-<div class="app-card-title">Report Hazard on the Ground</div>
-<div class="app-card-subtitle">See a road crack, mudslide, or fallen rocks? Warn your community.</div>
-""", unsafe_allow_html=True)
-
-        with st.form("quick_report_form"):
-            rep_type = st.selectbox(
-                "What did you observe?",
-                ["Road Crack / Soil Crack", "Rockfall / Falling Boulders", "Active Mud Movement", "Blocked Road / Landslide", "Sudden Water Stream Change"]
-            )
-            rep_desc = st.text_input("Location / Description:", placeholder="e.g., Near Haflong road curve KM-12")
-            rep_submit = st.form_submit_button("Submit Hazard Report", use_container_width=True, type="primary")
-
-            if rep_submit:
-                db = SessionLocal()
-                try:
-                    u = db.query(User).filter(User.id == current_user["id"]).first()
-                    alert = db.query(Alert).filter(Alert.status == "ACTIVE").order_by(Alert.sent_at.desc()).first()
-                    if u:
-                        mapping = {
-                            "Road Crack / Soil Crack": "ROAD_CRACK",
-                            "Rockfall / Falling Boulders": "FALLING_ROCKS",
-                            "Active Mud Movement": "SOIL_MOVEMENT",
-                            "Blocked Road / Landslide": "ROAD_BLOCKAGE",
-                            "Sudden Water Stream Change": "WATER_FLOW_CHANGE"
-                        }
-                        raw_obs = mapping.get(rep_type, "ROAD_CRACK")
-                        r = Report(
-                            user_id=u.id,
-                            alert_id=alert.id if alert else None,
-                            observation_type=raw_obs,
-                            description=rep_desc or f"Observed {rep_type}",
-                            latitude=cit_lat + 0.001,
-                            longitude=cit_lon + 0.001,
-                            status="PENDING",
-                            created_at=datetime.utcnow()
-                        )
-                        db.add(r)
-                        db.commit()
-                        db.refresh(r)
-                        validation_service.process_new_report(r, db)
-                        st.success("Hazard report submitted! Logged in community monitoring.")
-                finally:
-                    db.close()
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown("""<div class="app-card">
 <div class="app-card-title">Emergency Helplines (1-Tap Dial)</div>
+<div style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Contact district disaster control and first responders directly.</div>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
     <div class="help-dial-btn">
         <div class="help-number">1070</div>
@@ -821,6 +775,14 @@ if current_user["role"] == "citizen":
         <div class="help-number">100</div>
         <div class="help-label">Police Emergency</div>
     </div>
+</div>
+<div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+    <div style="font-weight: 700; font-size: 13px; color: #0f172a; margin-bottom: 4px;">Important Safety Guidelines:</div>
+    <ul style="font-size: 12px; color: #475569; margin: 0; padding-left: 18px; line-height: 1.6;">
+        <li>Keep emergency documents & medicines in a waterproof bag.</li>
+        <li>Follow designated high-ground routes shown on the map.</li>
+        <li>Check in using the <strong>I AM SAFE</strong> or <strong>SOS</strong> buttons above.</li>
+    </ul>
 </div>
 </div>""", unsafe_allow_html=True)
 
