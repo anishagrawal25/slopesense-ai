@@ -728,7 +728,7 @@ if current_user["role"] == "citizen":
 <div class="app-card-subtitle">Designated relief centres and safe high-ground locations in your area.</div>
 </div>""", unsafe_allow_html=True)
 
-        m = folium.Map(location=[cit_lat, cit_lon], zoom_start=13, tiles="CartoDB positron")
+        m = folium.Map(location=[cit_lat, cit_lon], zoom_start=13, tiles="OpenStreetMap")
 
         folium.Circle(
             location=[cit_lat, cit_lon],
@@ -984,7 +984,7 @@ elif current_user["role"] == "authority":
 
         with tab_map:
             st.markdown("#### Northeast Monitoring Stations & Risk Predictions")
-            m_auth = folium.Map(location=[25.5, 93.0], zoom_start=8, tiles="CartoDB positron")
+            m_auth = folium.Map(location=[25.5, 93.0], zoom_start=8, tiles="OpenStreetMap")
 
             for p in gee_service.get_all_monitoring_points():
                 pred = ml_service.predict_risk(p, db=db, save_to_db=False)
